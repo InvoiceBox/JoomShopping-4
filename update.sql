@@ -1,0 +1,2 @@
+INSERT INTO `#__jshopping_payment_method` (`payment_code`, `payment_class`, `scriptname`, `payment_publish`, `payment_ordering`, `payment_type`, `price`, `price_type`, `tax_id`, `show_descr_in_email`, `name_en-GB`, `name_de-DE`) VALUES ('INVOICEBOX', 'pm_invoicebox', 'pm_invoicebox', 1, 0, 2, 0.00, 0, 1, 0, 'INVOICEBOX', 'INVOICEBOX');
+UPDATE `#__jshopping_payment_method` SET `name_ru-RU` = 'INVOICEBOX' WHERE `payment_class` = 'pm_invoicebox';
