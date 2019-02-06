@@ -2,8 +2,8 @@
 /*
 * @package JoomShopping for Joomla!
 * @subpackage payment
-* @author beagler.ru
-* @copyright Copyright (C) 2017 beagler.ru. All rights reserved.
+* @author beagler.ru, invoicebox.ru
+* @copyright Copyright (C) 2018 beagler.ru, invoicebox.ru. All rights reserved.
 * @license GNU General Public License version 2 or later
 */
 
@@ -14,9 +14,7 @@ class pm_invoicebox extends PaymentRoot
 	function showPaymentForm($params, $pmconfigs)
 	{
 		include(dirname(__FILE__).'/paymentform.php');
-	}
-	
-	
+	} //func	
 	
 	function showAdminFormParams($params)
 	{
@@ -143,109 +141,111 @@ class pm_invoicebox extends PaymentRoot
 		$order_id = $order->order_id;
 		$currency = $order->currency_code_iso;
 		$email = $order->email;
+
 		$total = $order->order_total;
-		$signatureValue = md5(
-			$itransfer_participant_id.
-			$order_id.
-			$total.
-			$currency.
-			$invoicebox_api_key
-			); 
+		$total = number_format( $total, 2, ".", "" );
+		$signatureValue = md5( $itransfer_participant_id.$order_id.$total.$currency.$invoicebox_api_key); 
 		
 		
 		$params = array(
-                "itransfer_participant_id" => $itransfer_participant_id,
-				"itransfer_participant_ident" => $itransfer_participant_ident,
-				"itransfer_order_id" => $order_id,
-                "itransfer_order_amount" => $total,
-                "itransfer_order_currency_ident" => $currency,
-                "itransfer_testmode" => $testmode,
-                "itransfer_body_type" => "PRIVATE",
-                "itransfer_participant_sign" => $signatureValue,
-                "CMS" => 'JOOMSHOPPING',
-                "itransfer_order_description" => 'Оплата заказа ' . $order_id,
-				"itransfer_person_name" => $order->d_f_name.' '.$order->d_l_name,
-				"itransfer_person_email" => $email,
-                "itransfer_url_notify" => SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=".$pm_method->payment_class."&no_lang=1&tmpl=component"),
-				"itransfer_url_return" => SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=return&js_paymentclass=".$pm_method->payment_class)
-            );
-				$params['itransfer_person_phone'] = $order->d_phone;
+			"CMS" 					=> 'JOOMSHOPPING',
+			"itransfer_cms"				=> 'JOOMSHOPPING',
+	                "itransfer_participant_id" 		=> $itransfer_participant_id,
+			"itransfer_participant_ident" 		=> $itransfer_participant_ident,
+			"itransfer_order_id" 			=> $order_id,
+			"itransfer_order_amount" 		=> $total,
+			"itransfer_order_currency_ident" 	=> $currency,
+			"itransfer_testmode" 			=> $testmode,
+			"itransfer_body_type" 			=> "PRIVATE",
+			"itransfer_participant_sign" 		=> $signatureValue,
+			"itransfer_order_description" 		=> 'Оплата заказа ' . $order_id,
+			"itransfer_person_name" 		=> $order->d_f_name.' '.$order->d_l_name,
+			"itransfer_person_email" 		=> $email,
+			"itransfer_url_notify" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=".$pm_method->payment_class."&no_lang=1&tmpl=component"),
+			"itransfer_url_return" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=return&js_paymentclass=".$pm_method->payment_class)
+		); //params
+		$params['itransfer_person_phone'] = $order->d_phone;
 			
 
-	 $vatrate = 0;
-	
-	$orderitem = $order->getAllItems();
-       
-    $product_quantity = $i = 0;
-    foreach ($orderitem as $product) { 
-		$i++;
-		$product_quantity += $product->product_quantity;
-		 $params['itransfer_item'.$i.'_name'] = $product->product_name;
-		 $params['itransfer_item'.$i.'_quantity'] = $product->product_quantity;
-		 $params['itransfer_item'.$i.'_price'] = round($product->product_item_price*$product->product_quantity,2);
-		 $params['itransfer_item'.$i.'_vatrate'] = round($product->product_tax,2);
-		 $params['itransfer_item'.$i.'_measure'] = 'шт.';
-		
-	}	
-	$params['itransfer_order_quantity'] = $product_quantity;
-	if($order->order_shipping > 0){
-		$ships = $order->getShippingTaxExt();
-		foreach($ships as $shi){
-			$ship = $shi;
-			break;
-		}
-		$i++;
-		 $params['itransfer_item'.$i.'_name'] = 'Доставка';
-		 $params['itransfer_item'.$i.'_quantity'] = 1;
-		 $params['itransfer_item'.$i.'_price'] = round($order->order_shipping,2);
-		 $params['itransfer_item'.$i.'_vatrate'] = round($order->shipping_tax);
-		 $params['itransfer_item'.$i.'_vat'] = round($ship, 2);
-		 $params['itransfer_item'.$i.'_measure'] = 'шт.';
-	}
+		$vatrate = 0;
+
+		$orderitem = $order->getAllItems();
+		$product_quantity = $i = 0;
+
+		// Add card price element
+    	    	foreach ( $orderitem as $product )
+		{ 
+			$i++;
+			$product_quantity += $product->product_quantity;
+			$params['itransfer_item'.$i.'_name'] 		= $product->product_name;
+			$params['itransfer_item'.$i.'_quantity'] 	= $product->product_quantity;
+			$params['itransfer_item'.$i.'_price'] 		= round( $product->product_item_price*$product->product_quantity, 2 );
+			$params['itransfer_item'.$i.'_price'] 		= number_format( $params['itransfer_item'.$i.'_price'], 2, ".", "" );
+			$params['itransfer_item'.$i.'_vatrate'] 	= round( $product->product_tax, 2 );
+			$params['itransfer_item'.$i.'_measure'] 	= 'шт.';
+			
+		}; //foreach
+		$params['itransfer_order_quantity'] = $product_quantity;
+
+		// Add shipping price element
+		if ( $order->order_shipping > 0 )
+		{
+			$ships = $order->getShippingTaxExt();
+			foreach ($ships as $shi)
+			{
+				$ship = $shi;
+				break;
+			}; //
+			$i++;
+			$params['itransfer_item'.$i.'_name'] 		= 'Доставка';
+			$params['itransfer_item'.$i.'_quantity'] 	= 1;
+			$params['itransfer_item'.$i.'_price'] 		= round( $order->order_shipping, 2 );
+			$params['itransfer_item'.$i.'_price'] 		= number_format( $params['itransfer_item'.$i.'_price'], 2, ".", "" );
+			$params['itransfer_item'.$i.'_vatrate'] 	= round($order->shipping_tax);
+			$params['itransfer_item'.$i.'_vat'] 		= round($ship, 2);
+			$params['itransfer_item'.$i.'_measure'] 	= 'шт.';
+		}; // order shipping
 	
            
-            
-            $html = '<html>
-			<head>
-				<meta http-equiv="content-type" content="text/html; charset=utf-8" />           
-			</head>
-			<body>
-			<form method="post" action="https://go.invoicebox.ru/module_inbox_auto.u" accept-charset="UTF-8" id="paymentform" name="paymentform">';
-            foreach ($params as $key => $param) {
-                $html.= '<input type="hidden" name="' . $key . '" value="' . $param . '">';
-            }
-            $html.= '<input type="submit" value="Оплатить"/></form>';
-            $html.= _JSHOP_REDIRECT_TO_PAYMENT_PAGE.'
-			<br>
-			<script type="text/javascript">document.getElementById("paymentform").submit();</script>
-			</body>
-		</html>';
-			echo $html;
+		$html = '<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8" /></head>'.
+			'<body><form method="post" action="https://go.invoicebox.ru/module_inbox_auto.u" accept-charset="UTF-8" id="paymentform" name="paymentform">';
+
+		foreach ($params as $key => $param)
+		{
+                	$html.= '<input type="hidden" name="' . $key . '" value="' . $param . '" />';
+		}; //foreach
+
+		$html.= '<input type="submit" value="Оплатить"/></form>';
+		$html.= _JSHOP_REDIRECT_TO_PAYMENT_PAGE.'<br/><script type="text/javascript">document.getElementById("paymentform").submit();</script></body></html>';
+		echo $html;
+
 		die();
-	}
+	} //func
 
 	
 	function getUrlParams($pmconfigs)
 	{      
 		$order_id = JFactory::getApplication()->input->getInt("participantOrderId");
 
-        $params = array();
-        $params['order_id'] = $order_id;
-        $params['hash'] = "";
-        $params['checkHash'] = 0;
-        $params['checkReturnParams'] = 0;
+        	$params = array();
+        	$params['order_id'] = $order_id;
+        	$params['hash'] = "";
+        	$params['checkHash'] = 0;
+        	$params['checkReturnParams'] = 0;
 
-        return $params; 
+        	return $params; 
 	}
 	
-	function fixOrderTotal($order){
-        $total = $order->order_total;
-        if ($order->currency_code_iso=='HUF'){
-            $total = round($total);
-        }else{
-            $total = number_format($total, 2, '.', '');
-        }
-    return $total;
-    }
-}
-?>
+	function fixOrderTotal($order)
+	{
+	        $total = $order->order_total;
+		if ( $order->currency_code_iso=='HUF' )
+		{
+			$total = round($total);
+		} else
+		{
+			$total = number_format($total, 2, '.', '');
+		}; //if
+		return $total;
+	} //func
+}; //class

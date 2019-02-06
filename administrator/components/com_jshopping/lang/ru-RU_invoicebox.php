@@ -11,9 +11,9 @@
 defined('_JEXEC') or die();
 
 
-define('_JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_ID', 'Идентификатор интернет-магазина в системе Invoicebox');
-define('_JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_IDENT', 'Региональный код магазина в системе Invoicebox');
-define('_JSHOP_CFG_INVOICEBOX_INVOICEBOX_API_KEY', 'Ключ безопасности в системе Invoicebox');
+define('_JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_ID', 'Идентификатор интернет-магазина в системе ИнвойсБокс');
+define('_JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_IDENT', 'Региональный код магазина в системе ИнвойсБокс');
+define('_JSHOP_CFG_INVOICEBOX_INVOICEBOX_API_KEY', 'Ключ безопасности в системе ИнвойсБокс');
 define('_JSHOP_CFG_INVOICEBOX_TESTMODE', 'Тестовый режим');
 define('_JSHOP_ERROR_INVOICEBOX_SUM', 'Не верная сумма');
 define('_JSHOP_ERROR_INVOICEBOX_MD5', 'Не правильная подпись запроса');

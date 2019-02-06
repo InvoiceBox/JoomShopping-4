@@ -12,9 +12,9 @@ defined('_JEXEC') or die();
 
 
 
-define('_JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_ID', 'Online store identifier in the Invoicebox');
-define('_JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_IDENT', 'Regional store code in the Invoicebox');
-define('_JSHOP_CFG_INVOICEBOX_INVOICEBOX_API_KEY', 'Security Key in Invoicebox');
+define('_JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_ID', 'Online store identifier in the InvoiceBox');
+define('_JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_IDENT', 'Regional store code in the InvoiceBox');
+define('_JSHOP_CFG_INVOICEBOX_INVOICEBOX_API_KEY', 'Security Key in InvoiceBox');
 define('_JSHOP_CFG_INVOICEBOX_TESTMODE', 'Test mode');
 define('_JSHOP_ERROR_INVOICEBOX_SUM', 'Invalid amount');
 define('_JSHOP_ERROR_INVOICEBOX_MD5', 'Invalid request signature');
