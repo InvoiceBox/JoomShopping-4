@@ -32,6 +32,6 @@
 3. Пройдите по вкладку "Уведомления по протоколу" -> выберите "Тип уведомления" "Оплата/HTTP/Post (HTTP POST запрос с данными оплаты в переменных)"
 4. В поле "URL уведомления" укажите:
 
-    `<домен_сайта>/index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=invoicebox&no_lang=1&tmpl=component`
+    `<домен_сайта>/index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=pm_invoicebox&no_lang=1&tmpl=component`
 
 5. Сохраните изменения.
