@@ -137,7 +137,6 @@ class pm_invoicebox extends PaymentRoot
 		$itransfer_participant_ident = $pmconfigs['itransfer_participant_ident'];
 		$invoicebox_api_key = $pmconfigs['invoicebox_api_key'];
 		$testmode = $pmconfigs['itransfer_testmode'] ? '1' : '0';
-		$pm_method = $this->getPmMethod();
 		$order_id = $order->order_id;
 		$currency = $order->currency_code_iso;
 		$email = $order->email;
@@ -161,8 +160,8 @@ class pm_invoicebox extends PaymentRoot
 			"itransfer_order_description" 		=> 'Оплата заказа ' . $order_id,
 			"itransfer_person_name" 		=> $order->d_f_name.' '.$order->d_l_name,
 			"itransfer_person_email" 		=> $email,
-			"itransfer_url_notify" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=".$pm_method->payment_class."&no_lang=1&tmpl=component"),
-			"itransfer_url_return" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=return&js_paymentclass=".$pm_method->payment_class)
+			"itransfer_url_notify" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=pm_invoicebox&no_lang=1&tmpl=component"),
+			"itransfer_url_return" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=return&js_paymentclass=pm_invoicebox")
 		); //params
 		$params['itransfer_person_phone'] = $order->d_phone;
 			
