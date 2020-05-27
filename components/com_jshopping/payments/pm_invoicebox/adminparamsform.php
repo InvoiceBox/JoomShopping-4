@@ -18,7 +18,7 @@ defined('_JEXEC') or die();
 				<td class="key" width="300">
 					<?php echo _JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_ID; ?></td>
 				<td>
-					<input type="text" name="pm_params[itransfer_participant_id]" class="inputbox" value="<?php echo $params['itransfer_participant_id']; ?>" />
+					<input type="text" name="pm_params[itransfer_participant_id]" class="inputbox" value="<?php echo (isset($params['itransfer_participant_id'])?$params['itransfer_participant_id']:''); ?>" />
 					
 				</td>
 			</tr>
@@ -27,7 +27,7 @@ defined('_JEXEC') or die();
 					<?php echo _JSHOP_CFG_INVOICEBOX_ITRANSFER_PARTICIPANT_IDENT; ?>
 				</td>
 				<td>
-					<input type="text" name="pm_params[itransfer_participant_ident]" class="inputbox" value="<?php echo $params['itransfer_participant_ident'];?>" />
+					<input type="text" name="pm_params[itransfer_participant_ident]" class="inputbox" value="<?php echo(isset( $params['itransfer_participant_ident'])?$params['itransfer_participant_ident']:'');?>" />
 					
 				</td>
 			</tr>
@@ -36,7 +36,7 @@ defined('_JEXEC') or die();
 					<?php echo _JSHOP_CFG_INVOICEBOX_INVOICEBOX_API_KEY; ?>
 				</td>
 				<td>
-					<input type="text" name="pm_params[invoicebox_api_key]" class="inputbox" value="<?php echo $params['invoicebox_api_key'];?>" />
+					<input type="text" name="pm_params[invoicebox_api_key]" class="inputbox" value="<?php echo (isset($params['invoicebox_api_key'])?$params['invoicebox_api_key']:'');?>" />
 					
 				</td>
 			</tr>

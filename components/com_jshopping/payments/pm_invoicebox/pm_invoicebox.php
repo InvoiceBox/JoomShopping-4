@@ -33,7 +33,9 @@ class pm_invoicebox extends PaymentRoot
                 include(JPATH_SITE . '/administrator/components/com_jshopping/lang/ru-RU_invoicebox.php');
         }
 		$array_params = array('itransfer_participant_id', 'itransfer_participant_ident', 'invoicebox_api_key', 'itransfer_testmode', 'transaction_end_status');
-		
+		if(!is_array($params)){
+			$params = array();
+		}
 		foreach ($array_params as $key) {
 			if (!isset($params[$key])) {
 				$params[$key] = '';
@@ -137,6 +139,7 @@ class pm_invoicebox extends PaymentRoot
 		$itransfer_participant_ident = $pmconfigs['itransfer_participant_ident'];
 		$invoicebox_api_key = $pmconfigs['invoicebox_api_key'];
 		$testmode = $pmconfigs['itransfer_testmode'] ? '1' : '0';
+		$pm_method = $this->getPmMethod();
 		$order_id = $order->order_id;
 		$currency = $order->currency_code_iso;
 		$email = $order->email;
@@ -160,9 +163,10 @@ class pm_invoicebox extends PaymentRoot
 			"itransfer_order_description" 		=> 'Оплата заказа ' . $order_id,
 			"itransfer_person_name" 		=> $order->d_f_name.' '.$order->d_l_name,
 			"itransfer_person_email" 		=> $email,
-			"itransfer_url_notify" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=pm_invoicebox&no_lang=1&tmpl=component"),
-			"itransfer_url_return" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=return&js_paymentclass=pm_invoicebox")
+			"itransfer_url_return" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=return&js_paymentclass=".$pm_method->payment_class)
 		); //params
+		//"itransfer_url_notify" 			=> SEFLink(JURI::root()."index.php?option=com_jshopping&controller=checkout&task=step7&act=notify&js_paymentclass=".$pm_method->payment_class."&no_lang=1&tmpl=component"),
+			
 		$params['itransfer_person_phone'] = $order->d_phone;
 			
 
@@ -178,8 +182,8 @@ class pm_invoicebox extends PaymentRoot
 			$product_quantity += $product->product_quantity;
 			$params['itransfer_item'.$i.'_name'] 		= $product->product_name;
 			$params['itransfer_item'.$i.'_quantity'] 	= $product->product_quantity;
-			$params['itransfer_item'.$i.'_price'] 		= round( $product->product_item_price*$product->product_quantity, 2 );
-			$params['itransfer_item'.$i.'_price'] 		= number_format( $params['itransfer_item'.$i.'_price'], 2, ".", "" );
+			$params['itransfer_item'.$i.'_price'] 		= $product->product_item_price;
+			$params['itransfer_item'.$i.'_price'] 		= number_format( round($product->product_item_price,2), 2, ".", "" );
 			$params['itransfer_item'.$i.'_vatrate'] 	= round( $product->product_tax, 2 );
 			$params['itransfer_item'.$i.'_measure'] 	= 'шт.';
 			
@@ -198,8 +202,7 @@ class pm_invoicebox extends PaymentRoot
 			$i++;
 			$params['itransfer_item'.$i.'_name'] 		= 'Доставка';
 			$params['itransfer_item'.$i.'_quantity'] 	= 1;
-			$params['itransfer_item'.$i.'_price'] 		= round( $order->order_shipping, 2 );
-			$params['itransfer_item'.$i.'_price'] 		= number_format( $params['itransfer_item'.$i.'_price'], 2, ".", "" );
+			$params['itransfer_item'.$i.'_price'] 		= number_format( round( $order->order_shipping, 2 ), 2, ".", "" );
 			$params['itransfer_item'.$i.'_vatrate'] 	= round($order->shipping_tax);
 			$params['itransfer_item'.$i.'_vat'] 		= round($ship, 2);
 			$params['itransfer_item'.$i.'_measure'] 	= 'шт.';
