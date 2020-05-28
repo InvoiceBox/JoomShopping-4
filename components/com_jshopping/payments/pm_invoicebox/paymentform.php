@@ -9,7 +9,7 @@
 
 //защита от прямого доступа
 defined('_JEXEC') or die(); 
-if(is_array($params) && isset($params['itransfer_participant_id']) && !empty($params['itransfer_participant_id'])&& isset($params['itransfer_participant_ident']) && !empty($params['itransfer_participant_ident'])&& isset($params['invoicebox_api_key']) && !empty($params['invoicebox_api_key'])){
+if(is_array($pmconfigs) && isset($pmconfigs['itransfer_participant_id']) && !empty($pmconfigs['itransfer_participant_id'])&& isset($pmconfigs['itransfer_participant_ident']) && !empty($pmconfigs['itransfer_participant_ident'])&& isset($pmconfigs['invoicebox_api_key']) && !empty($pmconfigs['invoicebox_api_key'])){
 ?>
 <script type="text/javascript">
 	function check_pm_invoicebox() {
